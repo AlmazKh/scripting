@@ -1,0 +1,56 @@
+RED='\e[31m'
+GREEN='\e[32m'
+RESET='\e[0m'
+
+declare -i counter=0
+declare -i hit_counter=0
+declare -i miss_counter=0
+declare -a numbers
+
+while :
+do
+        counter+=1
+	random_number=${RANDOM: -1}
+	
+	echo "Step: $counter"	
+        read -p "Please enter number from 0 to 9 (q - quit): " input
+		
+	case "${input}" in 
+        [0-9])
+		if [[ "${input}" == "${random_number}" ]]
+            		then
+				colored_number="${GREEN}${random_number}${RESET}"
+        			echo "Hit! My number: ${random_number}"
+				hit_counter+=1
+    			else
+				colored_number="${RED}${random_number}${RESET}"
+        			echo "Miss! My number: ${random_number}"
+				miss_counter+=1
+		fi
+		numbers+=(${colored_number})
+		
+		total=$((hit_counter + miss_counter))
+		let hit_percent=hit_counter*100/total
+		let miss_percent=100-hit_percent
+
+		echo "Hit: ${hit_percent}%" "Miss: ${miss_percent}%"
+	
+		if((${#numbers[@]} < 10))
+			then
+				echo -e "Numbers: ${numbers[@]}"
+			else
+				echo -e "Numbers: ${numbers[@]: -10}"
+		fi
+    	;;
+    	q)
+        	echo "Bye"
+        	echo "Exit..."
+		break
+        ;;
+        *)
+        	echo "Not valid input"
+        	echo "Please repeat"
+        ;;
+        esac
+
+done
